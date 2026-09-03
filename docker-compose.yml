@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: elitefit_mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: gym_management
+
+  backend:
+    build: ./backend
+    container_name: elitefit_backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    ports:
+      - '5000:5000'
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: elitefit_frontend
+    restart: always
+    env_file:
+      - ./frontend/.env
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
